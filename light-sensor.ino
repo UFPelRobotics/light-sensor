@@ -1,14 +1,9 @@
+int sensorLeft = 0;
+int sensorRight = 0;
+int valueLeft = 0;
+int valueRight = 0;
 bool stateLeft = false;
 bool stateRight = false;
-
-int objectLeft = 0;
-int objectRight = 0;
-
-int contLeft = 0;
-int contRight = 0;
-
-// left - 8
-// right - 2
 
 void setup() {
   pinMode(8, INPUT);
@@ -16,43 +11,35 @@ void setup() {
   Serial.begin(9600);
 }
 
-void sensorLeft() {
-  if (stateLeft) {
+void counterLeft() {
     Serial.print("Left: ");
-    Serial.println(contLeft);
-    contLeft ++;
-  }
+    Serial.println(valueLeft);
+    valueLeft ++;
 }
 
-void sensorRight() {
-  if (stateRight) {
+void counterRight() {
     Serial.print("Right: ");
-    Serial.println(contRight);
-    contRight ++;
-  }
+    Serial.println(valueRight);
+    valueRight ++;
 }
 
 void loop() {
-  objectRight = digitalRead(2);
-  objectLeft = digitalRead(8);
+  sensorRight = digitalRead(2);
+  sensorLeft = digitalRead(8);
 
-  if (objectRight==1  & stateRight) {
+  if (sensorRight==1  & !stateRight) {
     stateRight = true;
-  } else if (objectRight==1  & !stateRight) {
-    stateRight = true;
-    sensorRight();
+    counterRight();
   }
-  else if (objectRight==0  & stateRight) {
+  else if (sensorRight==0  & stateRight) {
     stateRight = false;
   }
 
-  if (objectLeft==1  & stateLeft) {
+  if (sensorLeft==1  & !stateLeft) {
     stateLeft = true;
-  } else if (objectLeft==1  & !stateLeft) {
-    stateLeft = true;
-    sensorLeft();
+    counterLeft();
   }
-  else if (objectLeft==0  & stateLeft) {
+  else if (sensorLeft==0  & stateLeft) {
     stateLeft = false;
   }
 }
