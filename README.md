@@ -1,3 +1,3 @@
 # Light Sensor
 
-Algoritmo ara sensor da roda esquerda e controle de movimento.
+Algoritmo para sensor da roda esquerda e controle de movimento.
