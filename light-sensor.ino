@@ -1,45 +1,63 @@
-int sensorLeft = 0;
-int sensorRight = 0;
-int valueLeft = 0;
-int valueRight = 0;
-bool stateLeft = false;
-bool stateRight = false;
+#define pwmY 5
+#define pwmX 6
+#define light_port 8
+
+bool light_state = false;
+unsigned int left_counter = 0; 
 
 void setup() {
-  pinMode(8, INPUT);
-  pinMode(2, INPUT);
   Serial.begin(9600);
-}
 
-void counterLeft() {
-    Serial.print("Left: ");
-    Serial.println(valueLeft);
-    valueLeft ++;
-}
-
-void counterRight() {
-    Serial.print("Right: ");
-    Serial.println(valueRight);
-    valueRight ++;
+  pinMode(pwmY, OUTPUT);
+  pinMode(pwmX, OUTPUT);
+  analogWrite(pwmY, 135);
+  analogWrite(pwmX, 135);
+  
+  pinMode(light_port, INPUT);
 }
 
 void loop() {
-  sensorRight = digitalRead(2);
-  sensorLeft = digitalRead(8);
+  if (Serial.available() > 0) {
+    _move(Serial.read());
+  }
+  
+  int light_sensor = digitalRead(light_port);
 
-  if (sensorRight==1  & !stateRight) {
-    stateRight = true;
-    counterRight();
-  }
-  else if (sensorRight==0  & stateRight) {
-    stateRight = false;
-  }
+  if (light_sensor == 1 && !light_state) {
+      light_state = true;
+      Serial.println(left_counter++);
+    } else if (light_sensor == 0 && light_state) {
+      light_state = false;
+    }
+}
 
-  if (sensorLeft==1  & !stateLeft) {
-    stateLeft = true;
-    counterLeft();
-  }
-  else if (sensorLeft==0  & stateLeft) {
-    stateLeft = false;
+void _move(char control){
+  switch (control) {
+    case 'd':
+      analogWrite(pwmX, 80);
+      Serial.println("Right");
+      break;
+    case 'a':
+      analogWrite(pwmX, 190);
+      Serial.println("Left");
+      break;
+    case 'w':
+      analogWrite(pwmY, 190);
+      analogWrite(pwmX, 145);
+      Serial.println("Forward");
+      break;
+    case 's':
+      analogWrite(pwmY, 80);
+      Serial.println("Backward");
+      break;
+     case 'p':
+      analogWrite(pwmY, 135);
+      analogWrite(pwmX, 135);
+      break;
+    /*default:
+      analogWrite(pwmY, 135);
+      analogWrite(pwmX, 135);
+      Serial.println("Break");
+      break;*/
   }
 }
