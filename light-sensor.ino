@@ -5,14 +5,20 @@
 ros::NodeHandle  node;
 std_msgs::String light_msg;
 ros::Publisher light_pub("right_sensor", &light_msg);
+ros::Subscriber<std_msgs::String> movement_sub("movement", &getDirectionFromTopic);
 unsigned int right_counter = 0;
 bool light_state = false;
+
+void getDirectionFromTopic(const std_msgs::String &direction_msg) {
+  _move(direction_msg.data[0]);
+}
 
 void setup() {
   Serial.begin(9600);
   pinMode(light_port, INPUT);
   node.initNode();
   node.advertise(light_pub);
+  node.subscribe(movement_sub);
 }
 
 void loop() {
@@ -27,4 +33,24 @@ void loop() {
     light_state = false;
   }
   node.spinOnce();
+}
+
+void _move(char control){
+  switch (control) {
+    case 'd':
+      right_counter = 0;
+      break;
+    case 'a':
+      right_counter = 0;
+      break;
+    case 'w':
+      right_counter = 0;
+      break;
+    case 's':
+      right_counter = 0;
+      break;
+     case 'p':
+      right_counter = 0;
+      break;
+  }
 }
