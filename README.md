@@ -5,16 +5,12 @@ O código calcula o número de estágios percorridos pelo odômetro instalado na
 
 ## Sensor
 
-A entrada digital 8 está setada para contagem da roda direita.
+A entrada digital 12 está setada para contagem da roda direita.
 
 ## Odômetro
 
-O cálculo do odômetro é zerado em cada troca de estágio, assim, se é dado o comando de movimento para frente, o contador do odômetro inicia em zero, quando posto em neutro (parado), o contador volta para zero.
-
-A ideia é manter o controle de movimento por estágios nos arduinos para então manter o controle geral do odômetro no ROS.
+O cálculo do odômetro é feito pela leitura do sensor e publicado no ROS, o cálculo é feito ininterruptamente.
 
 ## ROS
 
 O ROS utiliza o canal right_sensor para captura dos dados da roda direita.
-
-Esse valor é zerado no arduino a cada troca de comando, como citado acima, o código do ROS que  recebe estes valores mantêm um contador geral para tomada de decisão e avaliação de LOG de execução.
