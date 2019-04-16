@@ -1,19 +1,27 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Bool.h>
 #define light_port 12
+
+unsigned int right_counter = 0;
+bool light_state = false;
+
+void clearCounter(const std_msgs::Bool &shouldClear) {
+  if (shouldClear.data)
+    right_counter = 0;
+}
 
 ros::NodeHandle  node;
 std_msgs::Int16 light_msg;
 ros::Publisher light_pub("right_sensor", &light_msg);
-unsigned int right_counter = 0;
-bool light_state = false;
+ros::Subscriber<std_msgs::Bool> clear_counter("pattern", &clearCounter);
 
 void setup() {
   Serial.begin(9600);
   pinMode(light_port, INPUT);
   node.initNode();
   node.advertise(light_pub);
-  node.subscribe(movement_sub);
+  node.subscribe(clear_counter);
 }
 
 void loop() {
