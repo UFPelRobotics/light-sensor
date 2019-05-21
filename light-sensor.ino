@@ -2,10 +2,10 @@
 #include <std_msgs/Int16.h>
 #include <std_msgs/Bool.h>
 
-#define odometryPin 13
+#define odometryPin 2
 
 unsigned int right_counter = 0;
-bool odometry_state = false;
+unsigned int tmp_counter = 0;
 
 void clearCounter(const std_msgs::Bool &shouldClear)
 {
@@ -25,20 +25,26 @@ void setup()
   node.initNode();
   node.advertise(odometry_pub);
   node.subscribe(clear_counter);
+  attachInterrupt(digitalPinToInterrupt(odometryPin), counter, RISING);
 }
 
 void loop()
 {
-  int odometry_sensor = digitalRead(odometryPin);
-  if (odometry_sensor == 1 && !odometry_state)
+  if (right_counter == 10)
   {
-    odometry_state = true;
-    value_odometry.data = right_counter++;
+    value_odometry.data = right_counter;
     odometry_pub.publish(&value_odometry);
-  }
-  else if (odometry_sensor == 0 && odometry_state)
-  {
-    odometry_state = false;
+    right_counter = 0;
   }
   node.spinOnce();
+}
+
+void counter()
+{
+  tmp_counter++;
+  if (tmp_counter == 4)
+  {
+    tmp_counter = 0;
+    right_counter++;
+  }
 }
