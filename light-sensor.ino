@@ -41,17 +41,15 @@ void setup()
 
 void loop()
 {
-  if (right_counter >= 10)
+  if ((right_counter % 10) == 0)
   {
     value_odometry_right.data = right_counter;
     odometry_pub_right.publish(&value_odometry_right);
-    right_counter = 0;
   }
-  if (left_counter >= 10)
+  if ((left_counter % 10) == 0)
   {
     value_odometry_left.data = left_counter;
     odometry_pub_left.publish(&value_odometry_left);
-    left_counter = 0;
   }
   node.spinOnce();
 }
